@@ -1,0 +1,5 @@
+
+/* Ensures that hidden sidebar text doesn't wrap or cause layout shifts */
+aside nav span {
+    white-space: nowrap;
+}

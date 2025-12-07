@@ -1,0 +1,120 @@
+
+<div class="space-y-6">
+  <!-- Breadcrumb and Title -->
+  <div>
+    <nav class="text-sm" aria-label="Breadcrumb">
+      <ol class="list-none p-0 inline-flex">
+        <li class="flex items-center">
+          <a routerLink="/domains-routing" class="text-gray-500 hover:text-gray-700">Domains & Routing</a>
+          <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
+        </li>
+        <li>
+          <span class="text-gray-700 font-medium">{{ domain().id === 'new' ? 'Add Domain' : 'Edit Domain' }}</span>
+        </li>
+      </ol>
+    </nav>
+    <h1 class="text-3xl font-bold text-gray-800 mt-2">{{ pageTitle() }}</h1>
+  </div>
+
+  <!-- Tabs -->
+  <div class="border-b border-gray-200">
+    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+      <button (click)="activeTab.set('general')"
+        [class.border-blue-500]="activeTab() === 'general'"
+        [class.text-blue-600]="activeTab() === 'general'"
+        [class.border-transparent]="activeTab() !== 'general'"
+        [class.text-gray-500]="activeTab() !== 'general'"
+        [class.hover:text-gray-700]="activeTab() !== 'general'"
+        [class.hover:border-gray-300]="activeTab() !== 'general'"
+        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+        General
+      </button>
+      <button (click)="activeTab.set('audit')"
+        [class.border-blue-500]="activeTab() === 'audit'"
+        [class.text-blue-600]="activeTab() === 'audit'"
+        [class.border-transparent]="activeTab() !== 'audit'"
+        [class.text-gray-500]="activeTab() !== 'audit'"
+        [class.hover:text-gray-700]="activeTab() !== 'audit'"
+        [class.hover:border-gray-300]="activeTab() !== 'audit'"
+        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+        Audit
+      </button>
+    </nav>
+  </div>
+
+  <!-- Tab Content -->
+  @if (activeTab() === 'general') {
+    <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="domainName" class="block text-sm font-medium text-gray-700">Domain *</label>
+              <input type="text" id="domainName" [(ngModel)]="domain().domainName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div>
+              <label for="destinationHost" class="block text-sm font-medium text-gray-700">Destination host *</label>
+              <input type="text" id="destinationHost" [(ngModel)]="domain().destinationHost" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div>
+              <label for="port" class="block text-sm font-medium text-gray-700">Port *</label>
+              <input type="number" id="port" [(ngModel)]="domain().port" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div class="flex items-center col-span-1 md:col-span-2 space-x-4">
+                <div class="flex items-center">
+                    <input id="tlsRequired" type="checkbox" [(ngModel)]="domain().isTlsRequired" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="tlsRequired" class="ml-2 block text-sm text-gray-900">Require TLS for this domain</label>
+                </div>
+                <div class="flex items-center">
+                    <label for="status" class="mr-2 block text-sm font-medium text-gray-700">Status:</label>
+                    <button type="button" 
+                        (click)="domain.update(d => ({...d, status: d.status === 'Active' ? 'Disabled' : 'Active'}))"
+                        [class.bg-blue-600]="domain().status === 'Active'"
+                        [class.bg-gray-200]="domain().status === 'Disabled'"
+                        class="relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" role="switch">
+                        <span class="sr-only">Use setting</span>
+                        <span aria-hidden="true" 
+                            [class.translate-x-5]="domain().status === 'Active'"
+                            [class.translate-x-0]="domain().status === 'Disabled'"
+                            class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
+                    </button>
+                    <span class="ml-2 text-sm font-medium" [class.text-green-600]="domain().status === 'Active'" [class.text-gray-500]="domain().status !== 'Active'">
+                        {{ domain().status }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+  }
+  @if (activeTab() === 'audit') {
+    <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Audit Information</h3>
+        <dl class="mt-5 grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+            <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">Created by</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ domain().createdBy }}</dd>
+            </div>
+            <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">Created at</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ domain().createdAt | date:'medium' }}</dd>
+            </div>
+            <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">Last updated by</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ domain().lastUpdatedBy }}</dd>
+            </div>
+            <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">Last updated at</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ domain().lastUpdated | date:'medium' }}</dd>
+            </div>
+        </dl>
+    </div>
+  }
+
+  <!-- Action Buttons -->
+  <div class="flex justify-end space-x-3">
+    <button (click)="router.navigate(['/domains-routing'])" type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      Cancel
+    </button>
+    <button (click)="save()" type="button" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      Save
+    </button>
+  </div>
+</div>

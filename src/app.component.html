@@ -1,0 +1,60 @@
+
+<div class="flex h-screen bg-gray-100">
+  <!-- Sidebar -->
+  <aside 
+    class="flex flex-col bg-white border-r transition-all duration-300 ease-in-out"
+    [class.w-64]="isSidebarOpen()" 
+    [class.w-20]="!isSidebarOpen()">
+    <div class="flex items-center justify-between h-16 px-6 border-b">
+      <h1 
+        class="text-xl font-bold text-gray-800 transition-opacity duration-300"
+        [class.opacity-100]="isSidebarOpen()"
+        [class.opacity-0]="!isSidebarOpen()">
+        Security Gateway
+      </h1>
+      <button (click)="toggleSidebar()" class="p-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+    </div>
+    <nav class="flex-1 overflow-y-auto">
+      <ul class="py-4">
+        @for (link of navLinks(); track link.path) {
+          <li>
+            <a 
+              [routerLink]="link.path" 
+              routerLinkActive="bg-blue-50 border-r-4 border-blue-500 text-blue-600"
+              class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100"
+              [title]="link.label">
+              <span [innerHTML]="link.icon"></span>
+              <span 
+                class="ml-4 font-medium transition-opacity duration-200"
+                [class.opacity-100]="isSidebarOpen()"
+                [class.opacity-0]="!isSidebarOpen()">
+                {{ link.label }}
+              </span>
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <!-- Header -->
+    <header class="flex items-center justify-between h-16 px-6 bg-white border-b">
+      <div><!-- Placeholder for breadcrumbs or page title --></div>
+      <div class="flex items-center space-x-4">
+        <span class="text-gray-600">Admin User</span>
+        <img class="w-8 h-8 rounded-full" src="https://picsum.photos/100/100" alt="User avatar">
+      </div>
+    </header>
+
+    <!-- Content area -->
+    <div class="flex-1 p-6 overflow-y-auto">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

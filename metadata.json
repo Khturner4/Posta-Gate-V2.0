@@ -1,0 +1,5 @@
+{
+  "name": "Security Gateway Admin Portal",
+  "description": "An admin portal for managing a multi-tenant email security gateway, including rules, logs, filters, and quarantine.",
+  "requestFramePermissions": []
+}
